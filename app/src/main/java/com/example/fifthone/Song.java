@@ -3,7 +3,7 @@ package com.example.fifthone;
 import java.util.ArrayList;
 
 public class Song {
-    private ArrayList<String> singer;
+    private String singer;
     private String song;
     private String path;
     private int duration;
@@ -14,7 +14,7 @@ public class Song {
         super();
     }
 
-    public Song(ArrayList<String> singer, String song, String id, int duration){
+    public Song(String singer, String song, String id, int duration){
         this.singer = singer;
         this.song  = song;
         this.id = id;
@@ -26,7 +26,7 @@ public class Song {
     }
 
 
-    public ArrayList<String> getSinger(){
+    public String getSinger(){
         return singer;
     }
 
@@ -50,7 +50,7 @@ public class Song {
         this.song = song;
     }
 
-    public void setSinger(ArrayList<String> singer){
+    public void setSinger(String singer){
         this.singer = singer;
     }
 

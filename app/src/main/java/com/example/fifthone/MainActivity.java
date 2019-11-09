@@ -34,6 +34,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sendRequest.setOnClickListener(this);
     }
 
+    public void xiamiTest(String songName){
+        JSONObject result = query("https://music-api-jwzcyzizya.now.sh/api/search/song/xiami?key=Dance Monkey&limit=5&page=1");
+        JSONArray songList = result.optJSONArray("songList");
+
+        try{
+            for(int i = 0; i < songList.length(); i++){
+                JSONObject single = songList.getJSONObject(i);
+                System.out.println(single.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public JSONObject query(String address) {
         HttpURLConnection connection = null;
@@ -96,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     for(Song s:songList){
                         System.out.println(s.getPath());
                     }
+
+                    xiamiTest("Dance");
 
                     showResponse(songList.toString());
                 }catch (Exception e){
@@ -162,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        Song song = new Song(art_names, name, id, duration);
+        Song song = new Song(art_names.get(0), name, id, duration);
 
         return song;
     }
