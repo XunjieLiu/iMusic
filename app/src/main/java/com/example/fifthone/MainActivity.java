@@ -174,47 +174,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void sendRequestWithURLConnection(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpURLConnection connection = null;
-                BufferedReader reader = null;
-
-                try{
-                    URL url = new URL("https://s.music.163.com/search/get/?s=黄昏&type=1");
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-
-                    InputStream in = connection.getInputStream();
-
-                    reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder response = new StringBuilder();
-                    String line;
-
-                    while((line = reader.readLine()) != null){
-                        response.append(line);
-                    }
-
-                    showResponse(response.toString());
-                }catch (Exception e){
-                    e.printStackTrace();
-                }finally {
-                    if(reader != null){
-                        try{
-                            reader.close();
-                        }catch(IOException e){
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if(connection != null){
-                        connection.disconnect();
-                    }
-                }
-            }
-        }).start();
-    }
+//    private void sendRequestWithURLConnection(){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                HttpURLConnection connection = null;
+//                BufferedReader reader = null;
+//
+//                try{
+//                    URL url = new URL("https://s.music.163.com/search/get/?s=黄昏&type=1");
+//                    connection = (HttpURLConnection) url.openConnection();
+//                    connection.setRequestMethod("GET");
+//
+//                    InputStream in = connection.getInputStream();
+//
+//                    reader = new BufferedReader(new InputStreamReader(in));
+//                    StringBuilder response = new StringBuilder();
+//                    String line;
+//
+//                    while((line = reader.readLine()) != null){
+//                        response.append(line);
+//                    }
+//
+//                    showResponse(response.toString());
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }finally {
+//                    if(reader != null){
+//                        try{
+//                            reader.close();
+//                        }catch(IOException e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    if(connection != null){
+//                        connection.disconnect();
+//                    }
+//                }
+//            }
+//        }).start();
+//    }
 
     private void showResponse(final String response){
         runOnUiThread(new Runnable() {
