@@ -11,84 +11,89 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class JSONUtils implements WebAPI {
+public class Xiami_JSONUtils implements WebAPI {
 
+    /*
+     * 我不确定一次能返回多少首歌曲，因为当一首歌没有file path的时候就不可以作为结果返回
+     *
+     * 增加返回歌曲有两个办法：
+     * 1. 增加一次检索的limit
+     * 2. 间隔一分钟后再去检索
+     * */
     @Override
     public ArrayList<Song> getSong(String name) {
-        ArrayList<Song> songList = null;
-        try{
-            songList = readJSON(query("http://118.89.196.158:3000/search?keywords=" + name + "&limit=5"));
-            findURL(songList);
+        JSONObject result = query("https://music-api-jwzcyzizya.now.sh/api/search/song/xiami?key= " + name + "&limit=10&page=1");
+        System.out.println(result);
+        ArrayList<Song> songList = readJSON(result);
 
-            for(Song s:songList){
-                System.out.println(s.getPath());
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
+        if(songList.size() < 1){
+            System.out.println("Nothing found");
+            return null;
+        }else{
+            return songList;
         }
 
-        return songList;
     }
 
     @Override
     public void findURL(ArrayList<Song> songs) {
-        try{
-            for(Song s:songs){
-                String id = s.getId();
-                JSONObject jsonObject = query("http://118.89.196.158:3000/song/url?id=" + id);
-                JSONArray data = jsonObject.optJSONArray("data");
-                JSONObject info = data.getJSONObject(0);
-                String url = info.optString("url");
 
-                s.setPath(url);
+    }
+
+    /*
+     * 搜索歌曲返回的JSON文件不一定会包含file路径，所以需要判断
+     * limit设置的是20首歌，方法只会返回有地址的单曲
+     * */
+    @Override
+    public ArrayList<Song> readJSON(JSONObject jsonObject) {
+        JSONArray songList = jsonObject.optJSONArray("songList");
+        ArrayList<Song> list = new ArrayList<Song>();
+
+        try{
+            for(int i = 0; i < songList.length(); i++){
+                JSONObject single = songList.getJSONObject(i);
+                Song s = getSingle(single);
+
+                if(s == null){
+                    continue;
+                }else{
+                    list.add(s);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public ArrayList<Song> readJSON(JSONObject jsonObject) {
-        ArrayList<Song> list = new ArrayList<Song>();
-        try{
-            JSONObject result = jsonObject.optJSONObject("result");
-            JSONArray songs = result.optJSONArray("songs");
-
-            for(int i = 0; i < songs.length(); i++){
-                JSONObject single = songs.getJSONObject(i);
-                Song s = getSingle(single);
-
-                list.add(s);
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
         return list;
     }
 
     @Override
     public Song getSingle(JSONObject single) {
-        String id = single.optString("id");
+        JSONArray art = single.optJSONArray("artists");
         String name = single.optString("name");
-        JSONArray artists = single.optJSONArray("artists");
-        ArrayList<String> art_names = new ArrayList<String>();
-        int duration = single.optInt("duration");
+        String path = null;
+        String art_name = null;
 
-        // Get artists' names
+        /*
+        * 搜索歌曲返回的JSON文件不一定会包含file路径，所以需要判断
+        * limit设置的是20首歌，方法只会返回有地址的单曲
+        * */
+
         try{
-            for(int i = 0; i < artists.length(); i++){
-                String art_name = artists.getJSONObject(i).optString("name");
-                art_names.add(art_name);
-            }
+            art_name = art.getJSONObject(0).optString("name");
+            path = single.optString("file");
+            System.out.println("This is path: " + path);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        Song song = new Song(art_names, name, id, duration);
+        if(path.length() < 5){
+            return null;
+        }else{
+            Song s = new Song(art_name, name, path);
 
-        return song;
+            return s;
+        }
     }
 
     @Override
@@ -139,4 +144,5 @@ public class JSONUtils implements WebAPI {
             return result;
         }
     }
+
 }

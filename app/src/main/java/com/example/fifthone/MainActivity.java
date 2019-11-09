@@ -35,17 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void xiamiTest(String songName){
-        JSONObject result = query("https://music-api-jwzcyzizya.now.sh/api/search/song/xiami?key=Dance Monkey&limit=5&page=1");
-        JSONArray songList = result.optJSONArray("songList");
-
-        try{
-            for(int i = 0; i < songList.length(); i++){
-                JSONObject single = songList.getJSONObject(i);
-                System.out.println(single.toString());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        Xiami_JSONUtils xiami = new Xiami_JSONUtils();
+        xiami.getSong(songName);
     }
 
     @Override
@@ -104,14 +95,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 try{
-                    ArrayList<Song> songList = readJSON(query("http://118.89.196.158:3000/search?keywords=" + name + "&limit=5"));
-                    findURL(songList);
+//                    ArrayList<Song> songList = readJSON(query("http://118.89.196.158:3000/search?keywords=" + name + "&limit=5"));
+//                    findURL(songList);
 
-                    for(Song s:songList){
-                        System.out.println(s.getPath());
-                    }
+//                    for(Song s:songList){
+//                        System.out.println(s.getPath());
+//                    }
 
-                    xiamiTest("Dance");
+                    Xiami_JSONUtils utils = new Xiami_JSONUtils();
+                    ArrayList<Song> songList = utils.getSong("In the end");
+
+                    System.out.println(songList.size());
 
                     showResponse(songList.toString());
                 }catch (Exception e){
