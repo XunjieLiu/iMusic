@@ -34,22 +34,23 @@ public class Player extends AppCompatActivity {
 
     private String TAG = "Player";
     private List<Song> songList;
-    private int currentPosition;
+    private int currentPosition = -1;
     private int currentTime;
     private int page = 1;
     private int play_style = 0;
 
-    private boolean isPlaying = false;
-    private boolean isPaused = false;
-    private boolean flag = true;
+    private boolean isPlaying;
+    private boolean isPaused;
+    private boolean flag;
 
-//    private Song currentSong;
+    //    private Song currentSong;
     private PlayerReceiver playerReceiver;
     public static final String START_SERVICE = "com.iMusic.action.NET_MUSIC_SERVICE";
     public static final String UPDATE_ACTION = "com.iMusic.action.UPDATE_ACTION";
     public static final String MUSIC_CURRENT = "com.iMusic.action.MUSIC_CURRENT";
     public static final String MUSIC_DURATION = "com.iMusic.action.MUSIC_DURATION";
-    public static final String MUSIC_COMPELE="com.iMusic.action.MUSIC_COMPLETE";
+    public static final String MUSIC_COMPLETE="com.iMusic.action.MUSIC_COMPLETE";
+
 
 
 
@@ -112,7 +113,7 @@ public class Player extends AppCompatActivity {
         filter.addAction(UPDATE_ACTION);
         filter.addAction(MUSIC_CURRENT);
         filter.addAction(MUSIC_DURATION);
-        filter.addAction((MUSIC_COMPELE));
+        filter.addAction((MUSIC_COMPLETE));
         registerReceiver(playerReceiver,filter);
         if(flag){
             play(currentPosition);
@@ -194,11 +195,11 @@ public class Player extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(MUSIC_CURRENT)){
-                    currentTime = intent.getIntExtra("currentTime",-1);
-                    played_time.setText(formatTime(currentTime));
-                    seekBar.setProgress(currentTime);
-                    Log.i(songList.get(currentPosition).getSong()+","+songList.get(currentPosition).getSinger(),"progress received");
-            }else if(action.equals(MUSIC_COMPELE)){
+                currentTime = intent.getIntExtra("currentTime",-1);
+                played_time.setText(formatTime(currentTime));
+                seekBar.setProgress(currentTime);
+                Log.i(songList.get(currentPosition).getSong()+","+songList.get(currentPosition).getSinger(),"progress received");
+            }else if(action.equals(MUSIC_COMPLETE)){
                 seekBar.setProgress(0);
                 switch (play_style){
                     case 0:

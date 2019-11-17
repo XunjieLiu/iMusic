@@ -22,7 +22,7 @@ public class NetMusicService extends Service implements MediaPlayer.OnPreparedLi
     public static final String MUSIC_CURRENT = "com.iMusic.action.MUSIC_CURRENT";
     public static final String MUSIC_DURATION = "com.iMusic.action.nMUSIC_DURATION";
     public static final String MUSIC_PERCENT="com.iMusic.action.NET_MUSIC_PERCENT";
-    public static final String MUSIC_COMPELE="com.iMusic.action.MUSIC_COMPLETE";
+    public static final String MUSIC_COMPLETE ="com.iMusic.action.MUSIC_COMPLETE";
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -58,11 +58,15 @@ public class NetMusicService extends Service implements MediaPlayer.OnPreparedLi
             }
             if(msg.what == 3){
                 Intent intent = new Intent();
-                intent.setAction(MUSIC_COMPELE);
+                intent.setAction(MUSIC_COMPLETE);
                 intent.putExtra("pos",currentPosition);
                 sendBroadcast(intent);
                 Log.i("HandleMessage","completion message has been sent");
 
+            }
+            if(msg.what == 4){
+                removeMessages(0);
+                Log.i("HandleMessage","completion message has been sent");
             }
         }
     };
@@ -131,6 +135,7 @@ public class NetMusicService extends Service implements MediaPlayer.OnPreparedLi
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.setOnPreparedListener(this);
+            handler.removeMessages(0);
             handler.sendEmptyMessage(0);
 //            handler.sendEmptyMessage(1);
 
@@ -156,11 +161,17 @@ public class NetMusicService extends Service implements MediaPlayer.OnPreparedLi
     public void stop(){
         if(mediaPlayer !=null){
             mediaPlayer.stop();
-            try{
-                mediaPlayer.prepare();
-            }catch(Exception e){
-                e.printStackTrace();;
-            }
+            handler.sendEmptyMessage(4);
+            stopSelf();
+//            handler.removeMessages(0);
+//            handler.removeMessages(1);
+//            handler.removeMessages(2);
+//            handler.removeMessages(3);
+//            try{
+//                mediaPlayer.prepare();
+//            }catch(Exception e){
+//                e.printStackTrace();;
+//            }
         }
     }
 

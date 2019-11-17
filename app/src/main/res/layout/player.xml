@@ -28,45 +28,54 @@
         android:orientation="vertical"
         android:paddingBottom="20dp"
         >
-        <androidx.cardview.widget.CardView
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            app:cardCornerRadius="110dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            >
             <androidx.cardview.widget.CardView
-                android:layout_width="210dp"
-                android:layout_height="210dp"
-                app:cardCornerRadius="105dp"
-                android:layout_gravity="center"
-                >
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/linkin"
-                    android:scaleType="centerCrop"
-                    />
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                app:cardCornerRadius="110dp"
+                android:layout_gravity="center">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="210dp"
+                    android:layout_height="210dp"
+                    app:cardCornerRadius="105dp"
+                    android:layout_gravity="center"
+                    >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/linkin"
+                        android:scaleType="centerCrop"
+                        />
+                </androidx.cardview.widget.CardView>
             </androidx.cardview.widget.CardView>
-        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/player_song"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="Son of Man"
-            android:textColor="#ffffff"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/player_song"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Son of Man"
+                android:textColor="#ffffff"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/player_singer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:gravity="center"
-            android:text="Xunjie Liu"
-            android:textColor="#ffffff"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/player_singer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:text="Xunjie Liu"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,6 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:text="0.00"
@@ -133,6 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:layout_marginLeft="10dp"

@@ -20,6 +20,11 @@ public class Song implements Serializable {
         this.id = id;
         this.duration = duration;
     }
+    public  Song(String singer, String song, String path){
+        this.singer = singer;
+        this.song  = song;
+        this.path = path;
+    }
 
     public String getId(){
         return id;
