@@ -1,9 +1,11 @@
 package com.example.imusic.Adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.imusic.Entity.Song;
@@ -17,11 +19,13 @@ public class MyAdapter extends BaseAdapter {
     private Context context;
     private List<Song> list;
     private int position_flag = 0;
+    private String ApiName;
 //    private int myBlue = Color.argb(0xff, 0x00, 0xBF, 0xFF);
 
-    public MyAdapter(MainActivity mainActivity, List<Song> list) {
+    public MyAdapter(MainActivity mainActivity, List<Song> list, String ApiName) {
         this.context = mainActivity;
         this.list = list;
+        this.ApiName = ApiName;
     }
     public void setFlag(int flag){
         this.position_flag = flag;
@@ -52,6 +56,15 @@ public class MyAdapter extends BaseAdapter {
             holder.song = (TextView) view.findViewById(R.id.title);
             holder.singer = (TextView) view.findViewById(R.id.author);
             holder.duration = (TextView) view.findViewById(R.id.duration);
+            holder.image = (ImageView) view.findViewById(R.id.source);
+            if(ApiName.equals("N")) {
+                holder.duration.setVisibility(View.VISIBLE);
+                holder.image.setImageResource(R.drawable.net_ease);
+            }
+            else {
+                holder.duration.setVisibility(View.INVISIBLE);
+                holder.image.setImageResource(R.drawable.xia_mi);
+            }
 //            holder.position = (TextView) view.findViewById(R.id.item_mymusic_position);
             view.setTag(holder);
         } else{
@@ -87,6 +100,7 @@ public class MyAdapter extends BaseAdapter {
         return view;
     }
     class ViewHolder {
+        ImageView image;
         TextView song;
         TextView singer;
         TextView duration;

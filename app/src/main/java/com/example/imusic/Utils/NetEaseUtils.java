@@ -19,7 +19,7 @@ public class NetEaseUtils {
     public static ArrayList<Song> getSong(String name) {
         ArrayList<Song> songList = new ArrayList<>();
         try{
-            songList = readJSON(query("http://118.89.196.158:3000/search?keywords=" + name + "&limit=5"));
+            songList = readJSON(query("http://118.89.196.158:3000/search?keywords=" + name + "&limit=10"));
             findURL(songList);
         }catch (Exception e){
             e.printStackTrace();

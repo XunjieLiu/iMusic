@@ -201,6 +201,7 @@ public class Player extends AppCompatActivity {
                 Log.i(songList.get(currentPosition).getSong()+","+songList.get(currentPosition).getSinger(),"progress received");
             }else if(action.equals(MUSIC_COMPLETE)){
                 seekBar.setProgress(0);
+
                 switch (play_style){
                     case 0:
                         play(currentPosition);
