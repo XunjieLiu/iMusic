@@ -9,7 +9,7 @@ import com.example.imusic.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Me extends AppCompatActivity {
+public class User extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +18,7 @@ public class Me extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Me.this, MainActivity.class);
+                Intent intent = new Intent(User.this, MainActivity.class);
                 startActivity(intent);
             }
         });

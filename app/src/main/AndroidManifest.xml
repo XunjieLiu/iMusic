@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Activity.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +20,8 @@
         </activity>
         <activity
             android:name=".Activity.Player"
-            android:label="Player">
+            android:label="Player"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -27,8 +29,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.Me"
-            android:label="My">
+            android:name=".Activity.User"
+            android:label="My"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -41,11 +44,7 @@
             android:resource="@xml/network_security_config" />
 
         <service
-            android:name=".Service.NetMusicService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".Service.MusicService"
+            android:name=".Service.myMusicService"
             android:enabled="true"
             android:exported="true" />
     </application>

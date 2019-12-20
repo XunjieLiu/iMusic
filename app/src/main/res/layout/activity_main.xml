@@ -11,17 +11,35 @@
         android:background="#ffffff"
         android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/me"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="right|top"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            android:paddingRight="100dp"
+            android:layout_weight="1"
             android:src="@drawable/avatar">
         </ImageView>
 
+        <ImageView
+            android:id="@+id/player"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingLeft="100dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/player"/>
+    </LinearLayout>
+
         <TextView
+            android:id="@+id/imusic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -62,27 +80,7 @@
                 android:layout_margin="0dp">
 
 
-
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/tabs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
-
-<!--                        <com.google.android.material.tabs.TabItem-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="NetEase" />-->
-
-<!--                        <com.google.android.material.tabs.TabItem-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:text="Xiami" />-->
-                    </com.google.android.material.tabs.TabLayout>
-
-
-
-    <!--            <ScrollView-->
+                <!--            <ScrollView-->
     <!--                android:id="@+id/easeNet"-->
     <!--                android:layout_width="match_parent"-->
     <!--                android:layout_height="wrap_content"-->
@@ -94,12 +92,64 @@
     <!--                    android:layout_height="match_parent"-->
     <!--                    />-->
     <!--            </ScrollView>-->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <!--                        <com.google.android.material.tabs.TabItem-->
+                    <!--                            android:layout_width="wrap_content"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:text="NetEase" />-->
+
+                    <!--                        <com.google.android.material.tabs.TabItem-->
+                    <!--                            android:layout_width="wrap_content"-->
+                    <!--                            android:layout_height="match_parent"-->
+                    <!--                            android:text="Xiami" />-->
+                </com.google.android.material.tabs.TabLayout>
+
                 <ListView
                     android:id="@+id/music_list"
                     android:layout_width="match_parent"
                     android:layout_height="276dp"
                     android:layout_weight="1"
                     tools:visibility="invisible" />
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:weightSum="10"-->
+<!--                    android:gravity="center"-->
+<!--                    android:paddingStart="30dp"-->
+<!--                    android:paddingEnd="30dp"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:background="@color/aquamarine"-->
+<!--                    >-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/pre_button"-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="50dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:src="@drawable/ic_skip_previous_white_36dp" />-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/play_button"-->
+<!--                        android:layout_width="60dp"-->
+<!--                        android:layout_height="60dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:src="@drawable/ic_play_white_36dp" />-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/next_button"-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="50dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:src="@drawable/ic_skip_next_white_36dp" />-->
+<!--                </LinearLayout>-->
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

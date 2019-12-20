@@ -30,7 +30,6 @@ public class Song implements Serializable {
         return id;
     }
 
-
     public String getSinger(){
         return singer;
     }

@@ -9,14 +9,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class XiaMiUtils {
-    static ArrayList<Song> songList;
-
+public class KuwoUtils{
     /*
      * 我不确定一次能返回多少首歌曲，因为当一首歌没有file path的时候就不可以作为结果返回
      *
@@ -24,15 +21,10 @@ public class XiaMiUtils {
      * 1. 增加一次检索的limit
      * 2. 间隔一分钟后再去检索
      * */
-    public static ArrayList<Song> getSong(String name) {
-        JSONObject result = query("https://music-api-jwzcyzizya.now.sh/api/search/song/xiami?key= " + name + "&limit=10&page=1");
-        System.out.println(result);
-        if(result == null){
-            songList = new ArrayList<Song>(0);
-        }else{
-            songList = readJSON(result);
-        }
 
+    public static ArrayList<Song> getSong(String name) {
+        JSONObject result = query("http://api.guaqb.cn/music/music/?input=" + name + "&filter=name&type=kugou");
+        ArrayList<Song> songList = readJSON(result);
 
         if(songList.size() < 1){
             System.out.println("Nothing found");
@@ -44,12 +36,8 @@ public class XiaMiUtils {
     }
 
 
-    /*
-     * 搜索歌曲返回的JSON文件不一定会包含file路径，所以需要判断
-     * limit设置的是20首歌，方法只会返回有地址的单曲
-     * */
     public static ArrayList<Song> readJSON(JSONObject jsonObject) {
-        JSONArray songList = jsonObject.optJSONArray("songList");
+        JSONArray songList = jsonObject.optJSONArray("data");
         ArrayList<Song> list = new ArrayList<Song>();
 
         try{
@@ -71,19 +59,19 @@ public class XiaMiUtils {
     }
 
     public static Song getSingle(JSONObject single) {
-        JSONArray art = single.optJSONArray("artists");
+        String art = single.optString("author");
         String name = single.optString("name");
         String path = null;
-        String art_name = null;
+        String pic = null;
 
         /*
-        * 搜索歌曲返回的JSON文件不一定会包含file路径，所以需要判断
-        * limit设置的是20首歌，方法只会返回有地址的单曲
-        * */
+         * 搜索歌曲返回的JSON文件不一定会包含file路径，所以需要判断
+         * limit设置的是20首歌，方法只会返回有地址的单曲
+         * */
 
         try{
-            art_name = art.getJSONObject(0).optString("name");
-            path = single.optString("file");
+            path = single.optString("music");
+            pic = single.optString("pic");
             System.out.println("This is path: " + path);
         }catch (Exception e){
             e.printStackTrace();
@@ -92,7 +80,10 @@ public class XiaMiUtils {
         if(path.length() < 5){
             return null;
         }else{
-            Song s = new Song(art_name.toString(), name, path);
+            Song s = new Song(art, name, path);
+//            if(pic.length() > 5){
+//                s.setPic(pic);
+//            }
 
             return s;
         }
@@ -145,5 +136,4 @@ public class XiaMiUtils {
             return result;
         }
     }
-
 }

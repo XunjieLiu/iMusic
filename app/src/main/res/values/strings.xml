@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">iMusic</string>
     <string name="hint_text">Search</string>
+    <string name="channel_name">channel_a</string>
+    <string name="channel_description">aaa</string>
+    <string name="channel_id">yuki</string>
 </resources>

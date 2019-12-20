@@ -1,9 +1,15 @@
 package com.example.imusic.Activity;
 
+
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.imusic.Entity.Song;
-import com.example.imusic.Service.NetMusicService;
+import com.example.imusic.Service.myMusicService;
 import com.example.imusic.R;
 
 import java.util.ArrayList;
@@ -29,28 +35,25 @@ public class Player extends AppCompatActivity {
     ImageView loop,shuffle;
     TextView duration_time,played_time;
     ImageView back;
+    ImageView album;
     TextView singer,song;
-    private Random random;
 
     private String TAG = "Player";
     private List<Song> songList;
     private int currentPosition = -1;
     private int currentTime;
-    private int page = 1;
     private int play_style = 0;
-
     private boolean isPlaying;
     private boolean isPaused;
     private boolean flag;
 
-    //    private Song currentSong;
     private PlayerReceiver playerReceiver;
     public static final String START_SERVICE = "com.iMusic.action.NET_MUSIC_SERVICE";
     public static final String UPDATE_ACTION = "com.iMusic.action.UPDATE_ACTION";
     public static final String MUSIC_CURRENT = "com.iMusic.action.MUSIC_CURRENT";
     public static final String MUSIC_DURATION = "com.iMusic.action.MUSIC_DURATION";
     public static final String MUSIC_COMPLETE="com.iMusic.action.MUSIC_COMPLETE";
-
+    public static final String GET_DURATION = "com.iMusic.action.GET_DURATION";
 
 
 
@@ -71,26 +74,29 @@ public class Player extends AppCompatActivity {
         played_time = findViewById(R.id.played_time);
         song = findViewById(R.id.player_song);
         singer = findViewById(R.id.player_singer);
+        album = findViewById(R.id.album);
+
+        playerReceiver  = new PlayerReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UPDATE_ACTION);
+        filter.addAction(MUSIC_CURRENT);
+        filter.addAction(MUSIC_DURATION);
+        filter.addAction((MUSIC_COMPLETE));
+        filter.addAction((GET_DURATION));
+        registerReceiver(playerReceiver,filter);
 
         songList = (ArrayList<Song>) getIntent().getSerializableExtra(("musicList"));
         int position = getIntent().getIntExtra("position",-1);
-//        currentPosition = position;
-//        currentSong = songList.get(currentPosition);
-//        System.out.println(currentSong.getSong());
-        System.out.println(songList.size());
-        System.out.println(position);
-
         if(isPlaying) {
             if (position != currentPosition) {
                 currentPosition = position;
-                flag = false;
+                flag = true;
                 isPaused = false;
                 isPlaying = true;
-
             } else {
                 flag = false;
-                isPlaying = true;
                 isPaused = false;
+                isPlaying = true;
             }
         } else {
             if (position != currentPosition) {
@@ -108,13 +114,7 @@ public class Player extends AppCompatActivity {
         setValues();
         setClick();
         seekBar.setOnSeekBarChangeListener(new SeekBarChangeEvent());
-        playerReceiver  = new PlayerReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(UPDATE_ACTION);
-        filter.addAction(MUSIC_CURRENT);
-        filter.addAction(MUSIC_DURATION);
-        filter.addAction((MUSIC_COMPLETE));
-        registerReceiver(playerReceiver,filter);
+
         if(flag){
             play(currentPosition);
             isPlaying = true;
@@ -128,21 +128,18 @@ public class Player extends AppCompatActivity {
         }else{
             play_button.setImageResource(R.drawable.ic_pause_white_36dp);
         }
-
     }
     public void setValues(){
-        song.setText(songList.get(currentPosition).getSong());
-        singer.setText(songList.get(currentPosition).getSinger());
-        duration_time.setText(formatTime(songList.get(currentPosition).getDuration()));
-        seekBar.setMax(songList.get(currentPosition).getDuration());
-
+        if(songList != null) {
+            song.setText(songList.get(currentPosition).getSong());
+            singer.setText(songList.get(currentPosition).getSinger());
+        }
     }
     public void setClick(){
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Player.this, MainActivity.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
         play_button.setOnClickListener(new View.OnClickListener() {
@@ -156,10 +153,14 @@ public class Player extends AppCompatActivity {
                     resume();
                     Log.v("clickresume", isPlaying + "" + isPaused);
                 }
+                else if(isPlaying){
+                    Log.e(TAG,"CONTINUE PLAYING");
+                }
                 else{
                     play(currentPosition);
                     Log.v("clickplay", isPlaying + "" + isPaused);
                 }
+
             }
         });
         next_button.setOnClickListener(new View.OnClickListener() {
@@ -200,8 +201,9 @@ public class Player extends AppCompatActivity {
                 seekBar.setProgress(currentTime);
                 Log.i(songList.get(currentPosition).getSong()+","+songList.get(currentPosition).getSinger(),"progress received");
             }else if(action.equals(MUSIC_COMPLETE)){
+                currentPosition = intent.getIntExtra("pos",-1);
+                System.out.println(currentPosition+"bbbbbbbbbbbbbbbbbbbbb");
                 seekBar.setProgress(0);
-
                 switch (play_style){
                     case 0:
                         play(currentPosition);
@@ -211,9 +213,14 @@ public class Player extends AppCompatActivity {
                         next();
                         break;
                 }
-//                int position = intent.getIntExtra("pos",-1);
                 Log.i(songList.get(currentPosition).getSong()+","+songList.get(currentPosition).getSinger(),"has been finished");
                 Log.i(songList.get(currentPosition).getSong()+","+songList.get(currentPosition).getSinger(),"has been finished");
+            }else if(action.equals(GET_DURATION)){
+                System.out.println(formatTime(intent.getIntExtra("duration",-1)));
+                duration_time.setText(formatTime(intent.getIntExtra("duration",-1)));
+                seekBar.setMax(intent.getIntExtra("duration",-1));
+            }else if(action.equals(MUSIC_DURATION)){
+                currentPosition = intent.getIntExtra("pos",-1);
             }
 
         }
@@ -229,13 +236,12 @@ public class Player extends AppCompatActivity {
         shuffle.show();
         play_style = 2;
     }
-
     public void play(int position){
         currentPosition = position;
         setValues();
         Intent intent = new Intent();
         intent.setAction(START_SERVICE);
-        intent.setClass(this, NetMusicService.class);
+        intent.setClass(this, myMusicService.class);
         intent.putExtra("url",songList.get(currentPosition).getPath());
         intent.putExtra("position",currentPosition);
         intent.putExtra("MSG","PLAY_MSG");
@@ -259,9 +265,7 @@ public class Player extends AppCompatActivity {
                 currentPosition = 2 * currentPosition++ % songList.size();
                 play(currentPosition);
                 break;
-
         }
-
     }
 
     public void pre(){
@@ -275,7 +279,7 @@ public class Player extends AppCompatActivity {
     public void pause(){
         Intent intent = new Intent();
         intent.setAction(START_SERVICE);
-        intent.setClass(this,NetMusicService.class);
+        intent.setClass(this, myMusicService.class);
         intent.putExtra("MSG","PAUSE_MSG");
         startService(intent);
         isPlaying = false;
@@ -285,13 +289,12 @@ public class Player extends AppCompatActivity {
     public void resume() {
         Intent intent = new Intent();
         intent.setAction(START_SERVICE);
-        intent.setClass(this,NetMusicService.class);
+        intent.setClass(this, myMusicService.class);
         intent.putExtra("MSG","RESUME_MSG");
         startService(intent);
         isPaused = false;
         isPlaying = true;
         play_button.setImageResource(R.drawable.ic_pause_white_36dp);
-
     }
     class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener{
 
@@ -303,10 +306,11 @@ public class Player extends AppCompatActivity {
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }
+
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             Intent intent = new Intent();
-            intent.setClass(Player.this,NetMusicService.class);
+            intent.setClass(Player.this, myMusicService.class);
             intent.setAction(START_SERVICE);
             intent.putExtra("MSG","PROGRESS_CHANGE");
             intent.putExtra("url",songList.get(currentPosition).getPath());
@@ -330,4 +334,9 @@ public class Player extends AppCompatActivity {
         unregisterReceiver(playerReceiver);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
